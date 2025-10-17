@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: China-Bangladesh Trade Opportunities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .kpi-number {
+            font-size: 3rem;
+            line-height: 1;
+        }
+        @media (min-width: 768px) {
+            .kpi-number {
+                font-size: 4rem;
+            }
+        }
+        main > section:not(#dashboard) {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-900">Trade Navigator</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#dashboard" class="nav-link active text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">📈 Dashboard</a>
+                        <a href="#products" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">📦 Product Deep Dive</a>
+                        <a href="#customers" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">👥 Customer Insights</a>
+                        <a href="#strategy" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">🚀 Strategy Guide</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="dashboard">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Market Dashboard</h2>
+                <p class="text-lg text-gray-600">A high-level overview of the China-to-Bangladesh import opportunity.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                    <p class="text-xl font-semibold text-gray-500 mb-2">Bangladesh E-Commerce Market Projection (2028)</p>
+                    <p class="kpi-number font-extrabold text-[#2563eb]">$15 Billion</p>
+                    <p class="text-sm text-gray-500">Source: Industry Analysis</p>
+                </div>
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold text-center mb-4">High-Potential Category Distribution</h3>
+                    <p class="text-center text-gray-600 mb-4">This chart shows the relative market demand and growth potential across the top recommended product categories. Consumer Electronics currently represents the largest opportunity.</p>
+                    <div class="chart-container h-80 max-h-96">
+                        <canvas id="categoryDonutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Product Deep Dive</h2>
+                <p class="text-lg text-gray-600">Select a category to analyze its top products and market dynamics.</p>
+            </div>
+            <div class="flex justify-center flex-wrap gap-2 mb-8" id="category-filters">
+                <button data-category="all" class="category-btn bg-blue-600 text-white px-4 py-2 rounded-full font-semibold">All Categories</button>
+                <button data-category="electronics" class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full font-semibold">Electronics</button>
+                <button data-category="fashion" class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full font-semibold">Fashion</button>
+                <button data-category="home" class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full font-semibold">Smart Home</button>
+                <button data-category="hobby" class="category-btn bg-white text-gray-700 px-4 py-2 rounded-full font-semibold">Hobby & Toys</button>
+            </div>
+            <div class="grid grid-cols-1 xl:grid-cols-5 gap-8">
+                <div class="xl:col-span-3 bg-white p-6 rounded-xl shadow-lg">
+                     <h3 class="text-xl font-bold text-center mb-1">SKU Analysis: Demand vs. Profit Margin</h3>
+                     <p class="text-center text-gray-600 mb-4 text-sm">Bubble size indicates competition level (larger = more competition).</p>
+                    <div class="chart-container">
+                        <canvas id="productBubbleChart"></canvas>
+                    </div>
+                </div>
+                <div class="xl:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold text-center mb-4">Top Selling SKUs</h3>
+                    <div id="sku-table-container" class="overflow-y-auto max-h-[420px]">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="customers">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Customer Insights</h2>
+                <p class="text-lg text-gray-600">Understanding your target buyers is key to success. Click a profile to see their top interests.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="customer-card cursor-pointer bg-white p-6 rounded-xl shadow-lg text-center transition-transform transform hover:scale-105" data-interests="Electronics, Fashion, Hobby & Toys">
+                    <span class="text-6xl mb-4 block">📱</span>
+                    <h3 class="text-2xl font-bold mb-2">Urban Youth & Students</h3>
+                    <p class="text-gray-600">Ages 16-25. Highly active on social media, price-sensitive, and drawn to trendy, visually appealing products. They are early adopters of new technology and fashion styles.</p>
+                </div>
+                <div class="customer-card cursor-pointer bg-white p-6 rounded-xl shadow-lg text-center transition-transform transform hover:scale-105" data-interests="Smart Home, Electronics, Hobby & Toys">
+                    <span class="text-6xl mb-4 block">💼</span>
+                    <h3 class="text-2xl font-bold mb-2">Young Professionals & Families</h3>
+                    <p class="text-gray-600">Ages 26-40. Value convenience, quality, and reliability. They invest in products that improve their lifestyle, such as smart home devices and quality goods for their children.</p>
+                </div>
+                <div class="customer-card cursor-pointer bg-white p-6 rounded-xl shadow-lg text-center transition-transform transform hover:scale-105" data-interests="Electronics, Fashion, Smart Home">
+                    <span class="text-6xl mb-4 block">🏪</span>
+                    <h3 class="text-2xl font-bold mb-2">Small Retailers & Resellers</h3>
+                    <p class="text-gray-600">Business owners. Focus on profit margins, product demand, and supplier reliability. They buy in bulk and are key B2B customers for a wide range of popular consumer goods.</p>
+                </div>
+            </div>
+             <div id="customer-interest-display" class="mt-8 bg-blue-50 p-6 rounded-xl shadow-inner text-center hidden">
+                <h4 class="text-xl font-bold text-blue-800 mb-2">Top Interests for Selected Profile:</h4>
+                <p id="interest-text" class="text-lg text-blue-700"></p>
+            </div>
+        </section>
+
+        <section id="strategy">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Go-To-Market Strategy Guide</h2>
+                <p class="text-lg text-gray-600">A four-step framework for launching your import business.</p>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="relative">
+                    <div class="absolute left-1/2 top-4 bottom-4 w-0.5 bg-gray-300 hidden md:block"></div>
+                    <div class="space-y-12">
+                        <div class="flex md:items-center flex-col md:flex-row">
+                            <div class="md:w-1/2 md:pr-8">
+                                <div class="bg-white p-6 rounded-xl shadow-lg">
+                                    <h3 class="text-2xl font-bold text-blue-600 mb-2">Step 1: Sourcing & Validation</h3>
+                                    <p class="text-gray-600">Research and identify reliable suppliers on platforms like Alibaba or 1688.com. Always order product samples to rigorously test quality, functionality, and packaging before placing a bulk order. Negotiate pricing based on volume.</p>
+                                </div>
+                            </div>
+                             <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl my-4 md:my-0 z-10 flex-shrink-0">1</div>
+                             <div class="md:w-1/2 md:pl-8"></div>
+                        </div>
+                        <div class="flex md:items-center flex-col md:flex-row-reverse">
+                            <div class="md:w-1/2 md:pl-8">
+                                 <div class="bg-white p-6 rounded-xl shadow-lg">
+                                    <h3 class="text-2xl font-bold text-blue-600 mb-2">Step 2: Logistics & Import</h3>
+                                    <p class="text-gray-600">Partner with a reputable freight forwarder to handle shipping from China to Bangladesh. Ensure you have the correct documentation (Bill of Lading, Commercial Invoice, Packing List) and understand the customs duties and taxes for your products to avoid delays.</p>
+                                </div>
+                            </div>
+                           <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl my-4 md:my-0 z-10 flex-shrink-0">2</div>
+                            <div class="md:w-1/2 md:pr-8"></div>
+                        </div>
+                         <div class="flex md:items-center flex-col md:flex-row">
+                            <div class="md:w-1/2 md:pr-8">
+                                <div class="bg-white p-6 rounded-xl shadow-lg">
+                                    <h3 class="text-2xl font-bold text-blue-600 mb-2">Step 3: Marketing & Branding</h3>
+                                    <p class="text-gray-600">Build your online presence. Create a brand page on Facebook and Instagram. Use high-quality photos and videos of your products. Run targeted ads to reach your ideal customer segments. List your products on local marketplaces like Daraz.com.bd.</p>
+                                </div>
+                            </div>
+                             <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl my-4 md:my-0 z-10 flex-shrink-0">3</div>
+                             <div class="md:w-1/2 md:pl-8"></div>
+                        </div>
+                         <div class="flex md:items-center flex-col md:flex-row-reverse">
+                            <div class="md:w-1/2 md:pl-8">
+                                <div class="bg-white p-6 rounded-xl shadow-lg">
+                                    <h3 class="text-2xl font-bold text-blue-600 mb-2">Step 4: Sales & Fulfillment</h3>
+                                    <p class="text-gray-600">Manage orders efficiently. Offer cash-on-delivery as a primary payment option. Partner with reliable local courier services (e.g., Pathao, REDX) to ensure timely and professional delivery to customers across Bangladesh. Good customer service is key to repeat business.</p>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl my-4 md:my-0 z-10 flex-shrink-0">4</div>
+                            <div class="md:w-1/2 md:pr-8"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const allSKUs = [
+            { name: 'TWS Wireless Earbuds', category: 'electronics', demand: 9.5, margin: 45, competition: 8, hs: '8518.30' },
+            { name: 'Fitness Tracker Smartwatch', category: 'electronics', demand: 9.2, margin: 50, competition: 7, hs: '8517.62' },
+            { name: '10,000mAh Power Bank', category: 'electronics', demand: 8.8, margin: 40, competition: 9, hs: '8507.60' },
+            { name: 'LED Ring Light w/ Tripod', category: 'electronics', demand: 8.5, margin: 60, competition: 6, hs: '9405.40' },
+            { name: 'Unisex Graphic Hoodies', category: 'fashion', demand: 8.8, margin: 55, competition: 8, hs: '6110.20' },
+            { name: 'Oversized Cotton T-Shirts', category: 'fashion', demand: 8.5, margin: 50, competition: 9, hs: '6109.10' },
+            { name: 'Canvas Crossbody Bags', category: 'fashion', demand: 7.9, margin: 65, competition: 6, hs: '4202.22' },
+            { name: 'WiFi Smart Plug', category: 'home', demand: 9.1, margin: 70, competition: 5, hs: '8536.69' },
+            { name: 'Smart LED RGB Bulb', category: 'home', demand: 8.7, margin: 65, competition: 6, hs: '8539.52' },
+            { name: 'Wireless Security Camera', category: 'home', demand: 8.2, margin: 55, competition: 7, hs: '8525.89' },
+            { name: 'Mini Hobby Drone (<250g)', category: 'hobby', demand: 8.2, margin: 60, competition: 7, hs: '8525.89' },
+            { name: 'Remote Control Car', category: 'hobby', demand: 7.8, margin: 50, competition: 8, hs: '9503.00' },
+            { name: 'Educational Building Blocks', category: 'hobby', demand: 7.5, margin: 45, competition: 6, hs: '9503.00' }
+        ];
+
+        let categoryDonutChart, productBubbleChart;
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) return label.join(' ');
+            return label;
+        };
+
+        const bubbleChartTooltipLabelCallback = (context) => {
+            const item = context.raw;
+            return `${item.name}: Demand (${item.x}), Margin (${item.y}%), Competition (${item.r})`;
+        };
+
+        const renderCategoryDonutChart = () => {
+            const ctx = document.getElementById('categoryDonutChart').getContext('2d');
+            categoryDonutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Consumer Electronics', 'Fast Fashion', 'Smart Home', 'Hobby & Toys'],
+                    datasets: [{
+                        label: 'Market Potential',
+                        data: [35, 25, 22, 18],
+                        backgroundColor: ['#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'],
+                        borderColor: '#fff',
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { title: tooltipTitleCallback } }
+                    }
+                }
+            });
+        };
+        
+        const renderProductBubbleChart = (skus) => {
+            const ctx = document.getElementById('productBubbleChart').getContext('2d');
+            const chartData = {
+                datasets: [{
+                    label: 'SKUs',
+                    data: skus.map(s => ({
+                        x: s.demand,
+                        y: s.margin,
+                        r: s.competition * 2,
+                        name: s.name
+                    })),
+                    backgroundColor: '#3b82f680'
+                }]
+            };
+
+            if (productBubbleChart) {
+                productBubbleChart.data = chartData;
+                productBubbleChart.update();
+            } else {
+                productBubbleChart = new Chart(ctx, {
+                    type: 'bubble',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { title: { display: true, text: 'Demand Score (0-10)' }, min: 7, max: 10 },
+                            y: { title: { display: true, text: 'Profit Margin (%)' }, min: 30, max: 80 }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { callbacks: { label: bubbleChartTooltipLabelCallback } }
+                        }
+                    }
+                });
+            }
+        };
+
+        const renderSKUTable = (skus) => {
+            const container = document.getElementById('sku-table-container');
+            if (skus.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500">No products found for this category.</p>`;
+                return;
+            }
+            
+            let tableHTML = `<table class="w-full text-sm text-left"><thead class="bg-gray-100 text-gray-600 uppercase"><tr>
+                <th class="p-3">Product</th><th class="p-3">HS Code</th></tr></thead><tbody class="divide-y">`;
+            
+            skus.forEach(sku => {
+                tableHTML += `<tr class="hover:bg-gray-50"><td class="p-3 font-semibold">${sku.name}</td><td class="p-3 font-mono">${sku.hs}</td></tr>`;
+            });
+            
+            tableHTML += `</tbody></table>`;
+            container.innerHTML = tableHTML;
+        };
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main > section');
+
+        const setActiveLink = (hash) => {
+            navLinks.forEach(link => {
+                link.classList.toggle('active', link.hash === hash);
+            });
+            sections.forEach(section => {
+                section.style.display = `#${section.id}` === hash ? 'block' : 'none';
+            });
+        };
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                setActiveLink(link.hash);
+                window.history.pushState(null, null, link.hash);
+            });
+        });
+
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        categoryButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const selectedCategory = btn.dataset.category;
+
+                categoryButtons.forEach(b => {
+                    b.classList.remove('bg-blue-600', 'text-white');
+                    b.classList.add('bg-white', 'text-gray-700');
+                });
+                btn.classList.add('bg-blue-600', 'text-white');
+                btn.classList.remove('bg-white', 'text-gray-700');
+
+                const filteredSKUs = selectedCategory === 'all'
+                    ? allSKUs
+                    : allSKUs.filter(sku => sku.category === selectedCategory);
+                
+                renderProductBubbleChart(filteredSKUs);
+                renderSKUTable(filteredSKUs);
+            });
+        });
+
+        const customerCards = document.querySelectorAll('.customer-card');
+        const interestDisplay = document.getElementById('customer-interest-display');
+        const interestText = document.getElementById('interest-text');
+
+        customerCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const interests = card.dataset.interests;
+                interestText.textContent = interests;
+                interestDisplay.classList.remove('hidden');
+                
+                customerCards.forEach(c => c.classList.remove('ring-2', 'ring-blue-500'));
+                card.classList.add('ring-2', 'ring-blue-500');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategoryDonutChart();
+            renderProductBubbleChart(allSKUs);
+            renderSKUTable(allSKUs);
+            const initialHash = window.location.hash || '#dashboard';
+            setActiveLink(initialHash);
+        });
+    </script>
+</body>
+</html>
